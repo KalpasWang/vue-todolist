@@ -1,0 +1,7 @@
+.done {
+  text-decoration: line-through;
+}
+
+.btn-danger:disabled {
+  opacity: 0.3;
+}

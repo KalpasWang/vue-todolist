@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="all.css" />
+  </head>
+  <body>
+    <div id="app" class="container my-3">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">待辦事項</span>
+        </div>
+        <input
+          v-model="newTodoTitle"
+          @keyup.enter="addTodo"
+          type="text"
+          class="form-control"
+          placeholder="準備要做的任務"
+        />
+        <div class="input-group-append">
+          <button
+            @click="addTodo"
+            :disabled="isBtnDisabled"
+            class="btn btn-danger"
+            type="button"
+          >
+            新增
+          </button>
+        </div>
+      </div>
+      <div class="card text-center">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                :class="{'active': visibility === 'all', 'text-danger': visibility !== 'all'}"
+                @click="visibility = 'all'"
+                href="#"
+              >
+                全部
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                :class="{'active': visibility === 'active', 'text-danger': visibility !== 'active'}"
+                @click="visibility = 'active'"
+                href="#"
+              >
+                進行中
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                :class="{'active': visibility === 'done', 'text-danger': visibility !== 'done'}"
+                @click="visibility = 'done'"
+                href="#"
+              >
+                已完成
+              </a>
+            </li>
+          </ul>
+        </div>
+        <ul class="list-group list-group-flush text-left">
+          <li
+            class="list-group-item"
+            v-for="(todo, index) in visibleTodos"
+            :key="todo.id"
+            ref="visibleTodos"
+          >
+            <div class="d-flex" v-if="todo.id !== editingTodo.id">
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  @click="changeTodoStatus(todo)"
+                  :id="todo.id"
+                />
+                <label
+                  class="form-check-label"
+                  :class="{'done': todo.isDone}"
+                  :for="todo.id"
+                >
+                  {{ todo.title }}
+                </label>
+              </div>
+              <button
+                type="button"
+                class="close ml-auto mr-2"
+                aria-label="edit"
+                @click="switchToEdit(todo, index)"
+              >
+                <i class="fa fa-pencil fa-fw" aria-hidden="true"></i>
+              </button>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                @click="deleteTodo(todo)"
+              >
+                <i class="fa fa-times fa-fw" aria-hidden="true"></i>
+              </button>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              v-if="todo.id === editingTodo.id"
+              @keyup.enter="editTodo(todo)"
+              v-model="editingTodoTitle"
+            />
+          </li>
+        </ul>
+        <div class="card-footer d-flex justify-content-between">
+          <span>還有 {{ activeTodos.length }} 筆任務未完成</span>
+          <a href="#" class="text-danger" @click.prevent="clearTodos"
+            >清除所有任務</a
+          >
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
+    <script src="all.js"></script>
+  </body>
+</html>
